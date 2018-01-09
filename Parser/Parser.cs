@@ -12,16 +12,9 @@ namespace Parser
     class Parser
     {  
         private EMail eMail;
-        private const string wordPattern = "[a-zA-Z]+";
-    
-        
-        
-       // private const string sentencePattern = "(\a|[\.!\?:])[^\.!\?:]+";
         private List <double> parsedEmail;
 
-       
-     
-
+            
         public Parser(EMail email)
         {
             eMail = email;
@@ -39,10 +32,13 @@ namespace Parser
         {
             if (eMail.IsBase64())
                 Base64Decode();
+
             parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.HTML_PATTERN).Count); //html tags number
             parsedEmail.Add(getHyperTextCount());
+            
             if(eMail.isHTML())
                  StripHTML();
+
             parsedEmail.Add(getTextLength());
             parsedEmail.Add(getCharCount());
             parsedEmail.Add(getAlphaCharsRatio());
@@ -79,6 +75,7 @@ namespace Parser
         {
             return eMail.getContent().Length;
         }
+
         public double getCharCount()
         {
             //return eMail.getContent().Count(char.);
@@ -141,6 +138,7 @@ namespace Parser
             foreach (var item in Constants.PUNCTATION_CHARS.Where(x => !char.IsLetterOrDigit(x)).GroupBy(x => x))
                 parsedEmail.Add(item.Count()); 
         }
+
         public List<double> getParsedEMail()
         {
             return parsedEmail;
@@ -153,31 +151,18 @@ namespace Parser
                 headerLength += line.Length;
             return headerLength;
         }
+
         public void StripHTML()
         {
             eMail.setContent(Regex.Replace(eMail.getContent(), Constants.HTML_PATTERN, String.Empty));// remove all markups
             eMail.setContent(HttpUtility.HtmlDecode(eMail.getContent()));// remove entities
         }
 
-    
-        
         public void countCommonWords()
         {
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[0]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[1]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[2]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[3]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[4]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[5]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[6]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[7]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[8]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[9]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[10]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[11]).Count);
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[12]).Count);
-                
-         }
+            for (int i = 0; i < 13; ++i )
+                parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[i]).Count);
+        }
         
       
       //remove entity!!
