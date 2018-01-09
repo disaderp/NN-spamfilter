@@ -10,24 +10,49 @@ namespace NeuralNetwork
     class Neuron
     {
         private double bias;
+        private bool isInput;
+        private double wInput;
+        private double _input;
         private Dictionary<Neuron, double> top;
         private double delta;
-        private double value;
-        public Neuron(){
-            
-        }
-        public double Val
+        private double val;
+        public Neuron(bool Input, List<Neuron> parent)
         {
-            get { return value; }
+            isInput = Input;
+            bias = 0;
+            wInput = Shared.Rand();
+            if (!isInput)
+            {
+                top = new Dictionary<Neuron, double>();
+                foreach (Neuron n in parent)
+                {
+                    top.Add(n, Shared.Rand());
+                }
+            }
+        }
+        public double Value
+        {
+            get { return val; }
+        }
+        public double Input
+        {
+            set { if (this.isInput) { _input = value; } }
         }
         public void calculate()
         {
             double sum = bias;
-            foreach (KeyValuePair <Neuron, double> parent in top)
+            if (isInput)
             {
-                sum += parent.Key.Val * parent.Value;
+                sum += wInput * _input;
             }
-            value = sigmoid(sum);
+            else
+            {
+                foreach (KeyValuePair<Neuron, double> parent in top)
+                {
+                    sum += parent.Key.Value * parent.Value;
+                }
+            }
+            val = sigmoid(sum);
         }
         public double sigmoid(double x)
         {

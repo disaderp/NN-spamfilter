@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace NeuralNetwork
 {
-    class Program
+    static class Shared
     {
-        static void Main(string[] args)
+        static private Random rand;
+        static public double Rand()
         {
-
+            rand = new Random();
+            return rand.NextDouble();
         }
     }
 }
