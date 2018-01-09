@@ -15,12 +15,15 @@ namespace Parser
         public static readonly string WORD_PATTERN = "[a-zA-Z]+"; //word pattern for regex
         public static readonly string HTML_PATTERN = "<[^>]+>"; //html pattern for regex
         public static readonly string LONG_WORD_PATTERN = @"[a-zA-Z]{2,}"; //more than 2 words
-        public static readonly string WORD_PATTER = @"(?:[a-z]{2,}|[ai])"; //all word, regardless of lengt
+        public static readonly string WORD_PATTER = @"(?:[a-z]{2,}|[ai])"; //all word, regardless of length
         public static readonly string HREF_PATTERN = "<a href=";
         public static readonly string LINK_PATTERN = "http://";
+        public static readonly string IMG_PATTERN = "<img";
+        public static readonly string FONT_PATTERN = "<font";
+        public static readonly string SENTENCE_PATTERN = @"(\S.+?[.!?])(?=\s+|$)";
 
-        public static readonly char[] PUNCTATION_CHARS = { '.', '،', ';', '?', '!', ':', '(', ')', '–', '“', '«', '»', '<', '>', '[', ']', '{', '}' };
-        public static readonly char[] SPECIAL_CHARS = {'*', '_', '+', '=', '%', '$', '@', 'ـ', '/', '\"' };
+        public static readonly char[] PUNCTATION_CHARS = { '.', '،', ';', '!','?', ':', '(', ')', '–', '“', '«', '»', '<', '>', '[', ']', '{', '}' };
+        public static readonly char[] SPECIAL_CHARS = {'*','_','+', '=', '%', '$', '@', '-', '/', '\"' };
         public static readonly string[] COMMON_WORDS = { "shortest", "mandatory", "standardization", "sorry", "supported", "people's", "enter", "quality", "organization", "ivestment", "vary", "valuable", "republic" };
     }
 }

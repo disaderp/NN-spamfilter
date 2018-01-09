@@ -45,6 +45,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="EMail.cs" />
     <Compile Include="FileReader.cs" />
+    <Compile Include="Normalizer.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

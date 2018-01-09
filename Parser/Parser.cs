@@ -35,9 +35,11 @@ namespace Parser
 
             parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.HTML_PATTERN).Count); //html tags number
             parsedEmail.Add(getHyperTextCount());
+            parsedEmail.Add(getFontTagsCount());
+            parsedEmail.Add(getImgTagsCount());
             
             if(eMail.isHTML())
-                 StripHTML();
+                StripHTML();
 
             parsedEmail.Add(getTextLength());
             parsedEmail.Add(getCharCount());
@@ -47,30 +49,15 @@ namespace Parser
             parsedEmail.Add(getWhiteSpacesRatio());
             parsedEmail.Add(getLinksCount());
             parsedEmail.Add(getWordsCount());
+            parsedEmail.Add(getImgTagsCount());
+            parsedEmail.Add(getFontTagsCount());
             parsedEmail.Add(getShortWordsCount());
             parsedEmail.Add(getHeaderLength());
             countSpecialChars();
             countPunctationChars();
             countCommonWords();
-            /*
-            charCount = Regex.Matches(eMail.getContent(), "[a-zA-Z]+").Count); //total character number in message
-            sentenceCount = Regex.Matches(eMail.getContent(), sentencePattern).Count;
-            wordCount = Regex.Matches(eMail.getContent(), Constants.WORD_PATTERN).Count;//total words number in message
-            float avgWordLength = charCount / wordCount;
-            parsedEmail.Add(charCount);
-            parsedEmail.Add(wordCount);
-            parsedEmail.Add(avgWordLength);
-            parsedEmail.Add(eMail.getContent().Count(Char.IsUpper)/charCount);
-            parsedEmail.Add(eMail.getContent().Count(Char.IsWhiteSpace)/charCount);// whitespaces note: a lot of occured after deleting html tags
-           
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.HTML_PATTERN).Count); //html tags number
-            
-            
-            parsedEmail.Add(eMail.getContent().Count(char.IsLetterOrDigit)/charCount);//alphanumeric char ratio
-            parsedEmail.Add(eMail.getContent().Count(Char.IsDigit)/charCount); //digit chars ratio
-          */
-
         }
+        
         public double getTextLength()
         {
             return eMail.getContent().Length;
@@ -78,19 +65,27 @@ namespace Parser
 
         public double getCharCount()
         {
-            //return eMail.getContent().Count(char.);
-           return Regex.Matches(eMail.getContent(), "[a-zA-Z]+").Count;
+
+            double result = 0;
+            foreach (char c in eMail.getContent())
+            {
+                if (!char.IsWhiteSpace(c))
+                {
+                    result++;
+                }
+            }
+            return result;
+
         }
 
         public double getAlphaCharsRatio()
         {
-            return eMail.getContent().Count(char.IsLetterOrDigit)/getCharCount();
-           // return parsedEmail.Add(eMail.getContent().Count(char.IsLetterOrDigit)/getCharCount());
+            return (eMail.getContent().Count(char.IsLetterOrDigit))/getCharCount();
         }
 
         public double getUpperToLowerRatio()
         {
-            return eMail.getContent().Count(char.IsUpper)/eMail.getContent().Count(char.IsLower);
+            return eMail.getContent().Count(char.IsUpper) /(double)eMail.getContent().Count(char.IsLower);
         }
 
         public double getDigitRatio()
@@ -118,27 +113,149 @@ namespace Parser
             return Regex.Matches(eMail.getContent(), Constants.WORD_PATTERN).Count;
         }
 
+        public double getCharsInWordRatio()
+        {
+            return getCharCount() / getWordsCount();
+        }
+
+        private double getFontTagsCount()
+        {
+            return Regex.Matches(eMail.getContent(), Constants.FONT_PATTERN).Count;
+        }
+
+        private double getImgTagsCount()
+        {
+            return Regex.Matches(eMail.getContent(), Constants.IMG_PATTERN).Count;
+        }
+
+        public double getSentencesCount()
+        {
+            return Regex.Matches(eMail.getContent(), Constants.SENTENCE_PATTERN).Count;
+        }
+
+        public void countSentenceFeatures()
+        {
+            double wordCount = 0;
+            double charCount = 0;
+            MatchCollection matches = Regex.Matches(eMail.getContent(), Constants.SENTENCE_PATTERN);
+            var list = matches.Cast<Match>().Select(match => match.Value).ToList();
+            foreach (string line in list)
+            {
+                wordCount += Regex.Matches(line, Constants.WORD_PATTER).Count;
+                foreach (char c in line)
+                {
+                    if (!char.IsWhiteSpace(c))
+                    {
+                        charCount++;
+                    }
+                }
+            }
+            parsedEmail.Add(getSentencesCount() / wordCount);
+            parsedEmail.Add(getSentencesCount() / charCount);
+        }
+
+
+
+        public void StripHTML()
+        {
+            eMail.setContent(Regex.Replace(eMail.getContent(), Constants.HTML_PATTERN, String.Empty));// remove all markups
+            eMail.setContent(HttpUtility.HtmlDecode(eMail.getContent()));// remove entities
+        }
+
+        public void countCommonWords()
+        {
+            for (int i = 0; i < 13; ++i)
+                parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[i]).Count);
+        }    
+     
         public double getShortWordsCount()
         {
              return Regex.Matches(eMail.getContent(), Constants.LONG_WORD_PATTERN).Count - Regex.Matches(eMail.getContent(), Constants.HREF_PATTERN).Count;
         }
-        //public void analiseWord()
-       // {
-        //    double wordsCount
-      //  }
 
         public void countSpecialChars()
         {
-            foreach ( var item in Constants.SPECIAL_CHARS.Where(x=> !char.IsLetterOrDigit(x)).GroupBy(x => x))
-                parsedEmail.Add(item.Count());            
+            int [] values = Enumerable.Repeat(0, 10).ToArray();
+            foreach (char c in eMail.getContent())
+            {
+                if (c.Equals(Constants.PUNCTATION_CHARS[0]))
+                    ++values[0];
+                else if (c.Equals(Constants.SPECIAL_CHARS[1]))
+                    ++values[1];
+                else if (c.Equals(Constants.SPECIAL_CHARS[2]))
+                    ++values[2];
+                else if (c.Equals(Constants.SPECIAL_CHARS[3]))
+                    ++values[3];
+                else if (c.Equals(Constants.SPECIAL_CHARS[4]))
+                    ++values[4];
+                else if (c.Equals(Constants.SPECIAL_CHARS[5]))
+                    ++values[5];
+                else if (c.Equals(Constants.SPECIAL_CHARS[6]))
+                    ++values[6];
+                else if (c.Equals(Constants.SPECIAL_CHARS[7]))
+                    ++values[7];
+                else if (c.Equals(Constants.SPECIAL_CHARS[8]))
+                    ++values[8];
+                else if (c.Equals(Constants.SPECIAL_CHARS[9]))
+                    ++values[9];
+            }
+
+            for (int i = 0; i<10; ++i)
+            {
+                parsedEmail.Add((double)values[i]/getCharCount());
+            }
         }
        
         public void countPunctationChars()
         {
-            foreach (var item in Constants.PUNCTATION_CHARS.Where(x => !char.IsLetterOrDigit(x)).GroupBy(x => x))
-                parsedEmail.Add(item.Count()); 
-        }
+            int [] values = Enumerable.Repeat(-0, 18).ToArray();
+            foreach (char c in eMail.getContent())
+            {
+                if(c.Equals(Constants.PUNCTATION_CHARS[0]))
+                    ++values[0];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[1]))
+                    ++values[1];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[2]))
+                    ++values[2];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[3]))
+                    ++values[3];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[4]))
+                    ++values[4];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[5]))
+                    ++values[5];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[6]))
+                    ++values[6];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[7]))
+                    ++values[7];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[8]))
+                    ++values[8];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[9]))
+                    ++values[9];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[10]))
+                    ++values[10];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[11]))
+                    ++values[11];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[12]))
+                    ++values[12];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[13]))
+                    ++values[13];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[14]))
+                    ++values[14];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[15]))
+                    ++values[15];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[16]))
+                    ++values[16];
+                else if(c.Equals(Constants.PUNCTATION_CHARS[17]))
+                    ++values[17];
+            }
 
+            for (int i = 0; i<18; ++i)
+            {
+                parsedEmail.Add((double)values[i]/getCharCount());
+            }
+        }
+                
+        
         public List<double> getParsedEMail()
         {
             return parsedEmail;
@@ -151,22 +268,6 @@ namespace Parser
                 headerLength += line.Length;
             return headerLength;
         }
-
-        public void StripHTML()
-        {
-            eMail.setContent(Regex.Replace(eMail.getContent(), Constants.HTML_PATTERN, String.Empty));// remove all markups
-            eMail.setContent(HttpUtility.HtmlDecode(eMail.getContent()));// remove entities
-        }
-
-        public void countCommonWords()
-        {
-            for (int i = 0; i < 13; ++i )
-                parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[i]).Count);
-        }
-        
-      
-      //remove entity!!
-         
     };
 }
 
