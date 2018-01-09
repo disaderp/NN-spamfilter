@@ -10,7 +10,7 @@ namespace NeuralNetwork
         static void Main(string[] args)
         {
             Shared.initialize();
-            Network net = new NeuralNetwork.Network(2, 5);
+            Network net = new NeuralNetwork.Network(2, 4);
             List<double> inputs = new List<double>();
             inputs.Add(1.0);
             inputs.Add(1.0);//1.0
@@ -37,7 +37,7 @@ namespace NeuralNetwork
                 net.calcErr(0.0);
                 net.updateInputs(inputs4);
                 Console.WriteLine(net.getOutput());
-                net.calcErr(0.0);
+                net.calcErr(1.0);
             }
         }
     }
