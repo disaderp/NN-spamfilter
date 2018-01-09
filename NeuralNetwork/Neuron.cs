@@ -9,12 +9,13 @@ namespace NeuralNetwork
 {
     class Neuron
     {
+        private double LEARNINGRATE = 0.05;
         private double bias;
         private bool isInput;
         private double wInput;
         private double _input;
         private Dictionary<Neuron, double> top;
-        private double delta;
+        private double _delta;
         private double val;
         public Neuron(bool Input, List<Neuron> parent)
         {
@@ -29,6 +30,11 @@ namespace NeuralNetwork
                     top.Add(n, Shared.Rand());
                 }
             }
+        }
+        public double Delta
+        {
+            set { _delta = value; }
+            get { return _delta; }
         }
         public double Value
         {
@@ -54,9 +60,38 @@ namespace NeuralNetwork
             }
             val = sigmoid(sum);
         }
+        public void error(double expected)
+        {
+            foreach(KeyValuePair <Neuron, double> dendrite in top)
+            {
+                dendrite.Key.Delta += (_delta * dendrite.Value) * derivative(val);//backpropagation
+            }
+        }
+        public void updateWeight()
+        {
+            bias = bias + LEARNINGRATE * _delta;
+            if(isInput)
+            {
+                wInput = wInput + LEARNINGRATE * _delta * _input;
+            }else
+            {
+                foreach (KeyValuePair<Neuron, double> dendrite in top)
+                {
+                    top[dendrite.Key] = dendrite.Value + LEARNINGRATE * _delta * dendrite.Key.Value;
+                }
+            }
+        }
+        public void clearErr()
+        {
+            _delta = 0;
+        }
         public double sigmoid(double x)
         {
-            return 1 / (1 + Math.Exp(-x));
+            return 1.0 / (1.0 + Math.Exp(-x));
+        }
+        public double derivative(double x)
+        {
+            return x * (1.0 - x);
         }
     }
 }

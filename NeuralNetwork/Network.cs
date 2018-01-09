@@ -50,7 +50,26 @@ namespace NeuralNetwork
         }
         public void calcErr(double value)//real value
         {
+            foreach (Neuron n in listhid)
+            {
+                n.clearErr();
+            }
+            foreach (Neuron n in listin)
+            {
+                n.clearErr();
+            }
+            outputn.Delta = (value - outputn.Value) * outputn.derivative(outputn.Value);
+            outputn.error(value);
 
+            outputn.updateWeight();
+            foreach (Neuron n in listhid)
+            {
+                n.updateWeight();
+            }
+            foreach (Neuron n in listin)
+            {
+                n.updateWeight();
+            }
         }
     }
 }
