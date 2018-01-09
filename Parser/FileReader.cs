@@ -16,7 +16,7 @@ namespace Parser
             file = new System.IO.StreamReader(filename);
         }
         
-     
+    
         public EMail getEmail()
         {
             EMail eMail = new EMail();
@@ -31,7 +31,7 @@ namespace Parser
                 {
                     foreach (string item in eMail.getMetaData())
                     {
-                        if (item.Contains("Content-Type: multipart"))
+                        if (item.Contains(Constants.MTYPE))
                             isMulti = true;
                     }
 
@@ -43,11 +43,11 @@ namespace Parser
 
                     break;
                 }
-
-                eMail.getMetaData().Add(line);
+                
+                eMail.setMetaData(line);
             }
             eMail.setContent(file.ReadToEnd());//read the rest to EMail.content
-
+            
             return eMail;
         }            
     }
