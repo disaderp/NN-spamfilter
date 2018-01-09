@@ -9,7 +9,7 @@ namespace NeuralNetwork
 {
     class Neuron
     {
-        private double LEARNINGRATE = 0.05;
+        private double LEARNINGRATE = 0.5;
         private double bias;
         private bool isInput;
         private double wInput;
@@ -62,9 +62,11 @@ namespace NeuralNetwork
         }
         public void error(double expected)
         {
+            if (top == null) { return; }
             foreach(KeyValuePair <Neuron, double> dendrite in top)
             {
-                dendrite.Key.Delta += (_delta * dendrite.Value) * derivative(dendrite.Value);//backpropagation
+                dendrite.Key.Delta += (_delta * dendrite.Value) * derivative(dendrite.Key.Value);//backpropagation
+                dendrite.Key.error(expected);
             }
         }
         public void updateWeight()
@@ -75,7 +77,6 @@ namespace NeuralNetwork
             }else
             {
                 bias = bias + LEARNINGRATE * _delta;
-                //foreach (KeyValuePair<Neuron, double> dendrite in top)
                 for (int i = 0; i<top.Count(); i++)
                 {
                     KeyValuePair<Neuron, double> dendrite = top.ElementAt(i);
