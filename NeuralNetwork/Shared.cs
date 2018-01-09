@@ -9,9 +9,12 @@ namespace NeuralNetwork
     static class Shared
     {
         static private Random rand;
-        static public double Rand()
+        static public void initialize()
         {
             rand = new Random();
+        }
+        static public double Rand()
+        {
             return rand.NextDouble();
         }
     }

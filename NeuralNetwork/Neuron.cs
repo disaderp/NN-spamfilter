@@ -64,19 +64,21 @@ namespace NeuralNetwork
         {
             foreach(KeyValuePair <Neuron, double> dendrite in top)
             {
-                dendrite.Key.Delta += (_delta * dendrite.Value) * derivative(val);//backpropagation
+                dendrite.Key.Delta += (_delta * dendrite.Value) * derivative(dendrite.Value);//backpropagation
             }
         }
         public void updateWeight()
         {
-            bias = bias + LEARNINGRATE * _delta;
             if(isInput)
             {
                 wInput = wInput + LEARNINGRATE * _delta * _input;
             }else
             {
-                foreach (KeyValuePair<Neuron, double> dendrite in top)
+                bias = bias + LEARNINGRATE * _delta;
+                //foreach (KeyValuePair<Neuron, double> dendrite in top)
+                for (int i = 0; i<top.Count(); i++)
                 {
+                    KeyValuePair<Neuron, double> dendrite = top.ElementAt(i);
                     top[dendrite.Key] = dendrite.Value + LEARNINGRATE * _delta * dendrite.Key.Value;
                 }
             }

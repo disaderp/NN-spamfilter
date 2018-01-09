@@ -23,7 +23,7 @@ namespace NeuralNetwork
             for (int i = 0; i < hidden; i++)
             {
                 Neuron n = new NeuralNetwork.Neuron(false, listin);
-                listin.Add(n);
+                listhid.Add(n);
             }
 
             outputn = new NeuralNetwork.Neuron(false, listhid);
