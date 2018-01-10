@@ -14,7 +14,7 @@ namespace Parser
         {
             //Parser parser = new Parser();
 
-            string fileName = "00484.602c7afb217663a43dd5fa24d97d1ca4";
+           /* string fileName = "00484.602c7afb217663a43dd5fa24d97d1ca4";
             string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\spam4\" + fileName;
             string filePath1 = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\hardHam2\";
             FileReader fr = new FileReader(filePath);
@@ -26,8 +26,9 @@ namespace Parser
             System.Console.WriteLine(eMail.getContent());
 
             foreach (var value in netInputs)
-                System.Console.WriteLine(value);
-
+                System.Console.WriteLine(value);*/
+            Normalizer n = new Normalizer();
+            n.LoadData();
             //foreach (string line in eMail.getMetaData())
             //  System.Console.WriteLine(line);
 
@@ -107,7 +108,7 @@ namespace Parser
                 System.Console.WriteLine(value);    
             }
            */
-            System.Console.WriteLine(filePath1);
+            //System.Console.WriteLine(filePath1);
 
             System.Console.ReadKey();
 
