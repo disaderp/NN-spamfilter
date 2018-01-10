@@ -14,8 +14,8 @@ namespace Parser
         {
             //Parser parser = new Parser();
 
-            string fileName = "0001.f0cf04027e74802f09f723cb8916b48e";
-            string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\hardHam\" + fileName;
+            string fileName = "00484.602c7afb217663a43dd5fa24d97d1ca4";
+            string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\spam4\" + fileName;
             string filePath1 = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\hardHam2\";
             FileReader fr = new FileReader(filePath);
             EMail eMail = fr.getEmail();

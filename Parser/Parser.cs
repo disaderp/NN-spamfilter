@@ -24,7 +24,10 @@ namespace Parser
         
         public void Base64Decode()
         {
-            var base64EncodedBytes = System.Convert.FromBase64String(eMail.getContent());
+            Regex r = new Regex(@"[a-zA-Z0-9\+\/]*={0,3}");
+            string text = eMail.getContent().Replace("\r\n", "");
+            Match m = r.Match(text);
+            var base64EncodedBytes = System.Convert.FromBase64String(m.Value);
             eMail.setContent (System.Text.Encoding.UTF8.GetString(base64EncodedBytes));
         }
 
