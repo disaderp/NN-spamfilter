@@ -56,9 +56,12 @@ namespace Parser
             parsedEmail.Add(getFontTagsCount());
             parsedEmail.Add(getShortWordsCount());
             parsedEmail.Add(getHeaderLength());
+            parsedEmail.Add(getSentencesCount());
+            countSentenceFeatures();
             countSpecialChars();
             countPunctationChars();
             countCommonWords();
+          //  getWordsApperance();
         }
         
         public double getTextLength()
@@ -98,7 +101,7 @@ namespace Parser
 
         public double getWhiteSpacesRatio()
         {
-            return eMail.getContent().Count(char.IsWhiteSpace) / getCharCount();
+            return eMail.getContent().Count(char.IsWhiteSpace) / getTextLength();
         }
 
         public double getHyperTextCount() 
@@ -144,7 +147,7 @@ namespace Parser
             var list = matches.Cast<Match>().Select(match => match.Value).ToList();
             foreach (string line in list)
             {
-                wordCount += Regex.Matches(line, Constants.WORD_PATTER).Count;
+                wordCount += Regex.Matches(line, Constants.WORD_PATTERN).Count;
                 foreach (char c in line)
                 {
                     if (!char.IsWhiteSpace(c))
@@ -153,11 +156,22 @@ namespace Parser
                     }
                 }
             }
-            parsedEmail.Add(getSentencesCount() / wordCount);
-            parsedEmail.Add(getSentencesCount() / charCount);
+            parsedEmail.Add(wordCount/ getSentencesCount());
+            parsedEmail.Add(charCount/getSentencesCount());
         }
 
-
+        public void getWordsApperance()
+        {
+            var words = Regex.Split(eMail.getContent(), " ")
+                         .AsEnumerable()
+                         .GroupBy(w => w)
+                         .Select(g => new { key = g.Key, count = g.Count() });
+            foreach (var item in words)
+            {
+                System.Console.WriteLine(item.key + ":" + item.count);
+            
+            }
+        }
 
         public void StripHTML()
         {
@@ -173,7 +187,7 @@ namespace Parser
      
         public double getShortWordsCount()
         {
-             return Regex.Matches(eMail.getContent(), Constants.LONG_WORD_PATTERN).Count - Regex.Matches(eMail.getContent(), Constants.HREF_PATTERN).Count;
+             return Regex.Matches(eMail.getContent(), Constants.WORD_PATTERN).Count - Regex.Matches(eMail.getContent(), Constants.LONG_WORD_PATTERN).Count;
         }
 
         public void countSpecialChars()
