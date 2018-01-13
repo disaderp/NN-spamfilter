@@ -12,7 +12,7 @@ namespace Parser
         public static readonly string MTYPE = "Content-Type: multipart"; //is email multipart
         public static readonly string HTYPE = "Content-Type: text/html"; //is email in html
 
-        public static readonly string WORD_PATTERN = @"[a-zA-Z]+"; //word pattern for regex
+        public static readonly string WORD_PATTERN = @"(\w+)"; //word pattern for regex
         public static readonly string HTML_PATTERN = "<[^>]+>"; //html pattern for regex
         public static readonly string LONG_WORD_PATTERN = @"[a-zA-Z]{2,}"; //more than 2 words
        // public static readonly string WORD_PATTER = @"(?:[a-z]{2,}|[ai])"; //all word, regardless of length
