@@ -21,27 +21,54 @@ namespace Parser
             EMail eMail = fr.getEmail();
             Parser parser = new Parser(eMail);
             parser.parseContent();
-            var netInputs = parser.getParsedEMail();
+            
+            //var netInputs = parser.getParsedEMail();
 
-            foreach (var value in netInputs)
-                System.Console.WriteLine(value);
+           // foreach (var value in netInputs)
+               // System.Console.WriteLine(value);
 
             //System.Console.WriteLine(eMail.getContent());
             
-           /* Normalizer n = new Normalizer();
+            Normalizer n = new Normalizer();
             n.loadData();
-            n.countMaxMin();
-            var netInputs = n.normalizeData(parser.getParsedEMail());
-
-            foreach (var value in netInputs)
-                System.Console.WriteLine(value);
-            */
+            n.normalizeData();
             System.Console.WriteLine("done");
+           // var netInputs = n.normalizeData(parser.getParsedEMail());
 
+           // foreach (var value in netInputs)
+               // System.Console.WriteLine(value);
+          /*  string dir = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+            int featureCount = parser.getParsedEMail().Count;
+            double[] max = new double[featureCount];
+            
+
+            System.IO.StreamReader fileMax = new System.IO.StreamReader(dir + Constants.paths[9]);
+            System.IO.StreamReader fileMin = new System.IO.StreamReader(dir + Constants.paths[10]);
+
+            string line;
+            int a = 0;
+          
+
+            while (fileMax.Peek() > 0)
+            {
+                double value;
+                line = fileMax.ReadLine();
+                if (string.IsNullOrWhiteSpace(line))
+                    break;
+
+                if (Double.TryParse(line, out value))
+                    max[a++] = value;
+
+
+            }
+            foreach (int i in max)
+                System.Console.WriteLine(i);
+            System.Console.WriteLine("done");
+            */
             //foreach (string line in eMail.getMetaData())
             //  System.Console.WriteLine(line);
 
-              int madam = 0;
+             /* int madam = 0;
               int promotion = 0;
 
               int republic       = 0;
@@ -103,7 +130,7 @@ namespace Parser
                   madam, promotion,shortest,mandatory,standardization,sorry,supported,people,enter,quality,organization,investment,very,valuable,republic);
               
         
-           /*
+           
             List<string> files = new List<string>();
             foreach (string file in Directory.EnumerateFiles(filePath1, "*.*"))
             {
@@ -117,7 +144,7 @@ namespace Parser
                 System.Console.WriteLine(value);    
             }
            */
-            //System.Console.WriteLine(filePath1);
+        
 
             System.Console.ReadKey();
 
