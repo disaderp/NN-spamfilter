@@ -46,7 +46,7 @@ namespace Parser
 
         public void loadData()
         {
-            for (int i = 0; i<9; ++i)
+            for (int i = 0; i < 9; ++i)
             {
                 string dir = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\" + Constants.paths[i] + @"\";
                 foreach (string file in Directory.EnumerateFiles(dir, "*.*"))
@@ -56,10 +56,10 @@ namespace Parser
                     Parser parser = new Parser(eMail);
                     parser.parseContent();
                     normalizedData.Add(parser.getParsedEMail());
-                                    
+
                 }
             }
 
         }
-    
+        }  
 }

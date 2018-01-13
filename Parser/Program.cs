@@ -17,24 +17,34 @@ namespace Parser
             string fileName = "00485.94b2cb3aa454e6f6701c42cb1fd35ffe";
             string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\spam4\" + fileName;
             string filePath1 = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\spam4\";
+           
+            
+            //odpalam 1 mejla i parsuje
             FileReader fr = new FileReader(filePath);
             EMail eMail = fr.getEmail();
             Parser parser = new Parser(eMail);
             parser.parseContent();
-            
-            //var netInputs = parser.getParsedEMail();
+            var netInputs = parser.getParsedEMail();
 
-           // foreach (var value in netInputs)
-               // System.Console.WriteLine(value);
+            foreach (var value in netInputs)
+                System.Console.WriteLine(value);//wyswietlam wartosci sparsowanego mejla
 
-            //System.Console.WriteLine(eMail.getContent());
+           
+             System.Console.WriteLine(eMail.getContent());// wyswietlam zawartosc mejla po usunieciu wszelkiej masci gowna, celem weryfikacji (html etc)
             
+           
+            
+            /* parsuje wszystkie dane Normalizuje wszystkie ( 8 folderów) je  i zapisuje do pliku Parsemax.txt
             Normalizer n = new Normalizer();
             n.loadData();
             n.normalizeData();
             System.Console.WriteLine("done");
-           // var netInputs = n.normalizeData(parser.getParsedEMail());
-
+            */
+            
+            
+            
+           
+            //NIEISTOTNE, NIE RUSZAJ
            // foreach (var value in netInputs)
                // System.Console.WriteLine(value);
           /*  string dir = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
@@ -68,7 +78,15 @@ namespace Parser
             //foreach (string line in eMail.getMetaData())
             //  System.Console.WriteLine(line);
 
-             /* int madam = 0;
+
+
+
+
+
+            //zliczam wystapienie danych slow w we wszystkich mejlach, tam gdzie wyjdzie 0, trzeba je wyjebiac z constants i mozesz pokminic
+            // jakie moga byc w spmie a nie w hard hamie, jak nie to razem pokmninimy w sored
+            //POTRWA 30 SEKUND ZANIM JE POLICZY, WIEC NIE WYLACZAJ OD RAZU JAK CI SIE WYSWIETLI CONTENT I WARTOSCI LICZBOWE
+              int madam = 0;
               int promotion = 0;
 
               int republic       = 0;
@@ -131,20 +149,23 @@ namespace Parser
               
         
            
-            List<string> files = new List<string>();
+
+            //NIEISTOTNE, patrzylem po prostu ile tagow w sumie wytepuje dla danej grupy mejli
+            /*List<string> filess = new List<string>();
             foreach (string file in Directory.EnumerateFiles(filePath1, "*.*"))
             {
                 int value = 0;
                 string contents = File.ReadAllText(file);
                 files.Add(contents);
-                foreach (string item in files)
+                foreach (string item in filess)
                 {
                     value += Regex.Matches(item, Constants.IMG_PATTERN).Count;
                 }
                 System.Console.WriteLine(value);    
-            }
-           */
-        
+            }*/
+           
+ // PODSUMOWUJAC, W MEJNIE ODPALAM JEDNEGO MEJLA, PARSUJE GO I WYSWIETLAM WARTOSCI A POTEM WYSWIETLAM JEGO CONTENT PO SPODEM LICZE WSYTAPIENIA WYMIENIONYCH SLOW W SUMIE
+ // JAK COS, PYTAJ
 
             System.Console.ReadKey();
 

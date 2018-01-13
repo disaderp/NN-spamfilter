@@ -62,8 +62,14 @@ namespace Parser
             countPunctationChars();
             countCommonWords();
           //  getWordsApperance();
+            // TO DO funkcje grabara, jesli bedziesz zwracal wartosc to  parsedEmail.Add(fun1), jesli nie to w body dodaj, tak jak np. countCommonWord()
         }
         
+        // TO DO fun1, fun2 fun3.......
+
+
+
+
         public double getTextLength()
         {
             return eMail.getContent().Length;
@@ -160,7 +166,7 @@ namespace Parser
             parsedEmail.Add(charCount/getSentencesCount());
         }
 
-        public void getWordsApperance()
+        public void getWordsApperance()// TO DO zamienic na regexa Constants.WORD_PATTERN
         {
             var words = Regex.Split(eMail.getContent(), " ")
                          .AsEnumerable()
@@ -181,7 +187,7 @@ namespace Parser
 
         public void countCommonWords()
         {
-            for (int i = 0; i < 13; ++i)
+            for (int i = 0; i < Constants.COMMON_WORDS.Count(); ++i)
                 parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[i]).Count);
         }    
      
