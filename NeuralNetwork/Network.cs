@@ -71,5 +71,9 @@ namespace NeuralNetwork
                 n.updateWeight();
             }
         }
+        public void nextEpoch()
+        {
+            Neuron.LEARNINGRATE *= 0.99;
+        }
     }
 }

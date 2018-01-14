@@ -53,8 +53,6 @@ namespace Parser
             parsedEmail.Add(getWhiteSpacesRatio());
             parsedEmail.Add(getLinksCount());
             parsedEmail.Add(getWordsCount());
-            parsedEmail.Add(getImgTagsCount());
-            parsedEmail.Add(getFontTagsCount());
             parsedEmail.Add(getShortWordsCount());
             parsedEmail.Add(getHeaderLength());
             parsedEmail.Add(getSentencesCount());
@@ -93,7 +91,7 @@ namespace Parser
 
         public double getAlphaCharsRatio()
         {
-            return (eMail.getContent().Count(char.IsLetterOrDigit))/getCharCount();
+            return (eMail.getContent().Count(char.IsLetterOrDigit))/getCharCount();//@TODO: niewydajnie
         }
 
         public double getUpperToLowerRatio()
@@ -103,7 +101,7 @@ namespace Parser
 
         public double getDigitRatio()
         {
-            return eMail.getContent().Count(char.IsDigit)/getCharCount();
+            return eMail.getContent().Count(char.IsDigit)/getCharCount();//@TODO: niewydajnie: liczenie tego samego
         }
 
         public double getWhiteSpacesRatio()
@@ -126,9 +124,9 @@ namespace Parser
             return Regex.Matches(eMail.getContent(), Constants.WORD_PATTERN).Count;
         }
 
-        public double getCharsInWordRatio()
+        public double getCharsInWordRatio()//no reference
         {
-            return getCharCount() / getWordsCount();
+            return getCharCount() / getWordsCount();//@TODO: niewydajnie, liczenie 2x tego samego
         }
 
         private double getFontTagsCount()
@@ -163,27 +161,22 @@ namespace Parser
                     }
                 }
             }
-            if(getSentencesCount() == 0)
+            if(getSentencesCount() == 0)//to avoid NaNs //@TODO: niewydajnie
             {
                 parsedEmail.Add(0);
                 parsedEmail.Add(0);
                 return;
             }
-            parsedEmail.Add(wordCount/ getSentencesCount());
-            parsedEmail.Add(charCount/getSentencesCount());
+            parsedEmail.Add(wordCount/ getSentencesCount());//@TODO: niewydajnie
+            parsedEmail.Add(charCount/getSentencesCount());//@TODO: niewydajnie
         }
 
-        public void getWordsApperance()// TO DO zamienic na regexa Constants.WORD_PATTERN
+        public object getWordsApperance()
         {
-            var words = Regex.Split(eMail.getContent(), Constants.WORD_PATTERN)
+            return Regex.Split(eMail.getContent(), Constants.WORD_PATTERN)
                          .AsEnumerable()
                          .GroupBy(w => w)
                          .Select(g => new { key = g.Key, count = g.Count() });
-            foreach (var item in words)
-            {
-                System.Console.WriteLine(item.key + ":" + item.count);
-            
-            }
         }
 
         public void StripHTML()
@@ -194,11 +187,13 @@ namespace Parser
 
         public void countCommonWords()
         {
+            int common = 0;
             for (int i = 0; i < Constants.COMMON_WORDS.Count(); ++i)
-                parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[i]).Count);
+                common += Regex.Matches(eMail.getContent(), Constants.COMMON_WORDS[i]).Count;
+            parsedEmail.Add(common);//scalenie danych
         }    
      
-        public double getShortWordsCount()
+        public double getShortWordsCount()//@TODO: do fixniecia: niewydajna funkcja, liczenie kilka razy to samo
         {
              return Regex.Matches(eMail.getContent(), Constants.WORD_PATTERN).Count - Regex.Matches(eMail.getContent(), Constants.LONG_WORD_PATTERN).Count;
         }
@@ -206,7 +201,7 @@ namespace Parser
         public void countSpecialChars()
         {
             int [] values = Enumerable.Repeat(0, 10).ToArray();//@TODO: niepotrzebne przechowywanie poszczegolnych wartosci
-            foreach (char c in eMail.getContent())
+            foreach (char c in eMail.getContent())//@TODO: trzeba scalic dane
             {
                 if (c.Equals(Constants.PUNCTATION_CHARS[0]))
                     ++values[0];
@@ -239,7 +234,7 @@ namespace Parser
         public void countPunctationChars()
         {
             int [] values = Enumerable.Repeat(-0, 18).ToArray();//@TODO: niepotrzebne przechowywanie poszczegolnych wartosci
-            foreach (char c in eMail.getContent())
+            foreach (char c in eMail.getContent())//@TODO: trzeba scalic dane
             {
                 if(c.Equals(Constants.PUNCTATION_CHARS[0]))
                     ++values[0];

@@ -9,7 +9,7 @@ namespace NeuralNetwork
 {
     class Neuron
     {
-        private double LEARNINGRATE = 10;
+        public static double LEARNINGRATE = 20;
         private double bias;
         private bool isInput;
         private double wInput;

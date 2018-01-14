@@ -34,10 +34,11 @@ namespace NeuralNetwork
                 net.calcErr(0.0);
                 net.updateInputs(inputs3);
                 Console.WriteLine(net.getOutput());
-                net.calcErr(0.0);
+                net.calcErr(1.0);
                 net.updateInputs(inputs4);
                 Console.WriteLine(net.getOutput());
-                net.calcErr(1.0);
+                net.calcErr(0.0);
+                net.nextEpoch();
             }
         }
     }

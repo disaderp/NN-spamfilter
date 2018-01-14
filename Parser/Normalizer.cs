@@ -23,11 +23,8 @@ namespace Parser
         public List<List<double>> normalizeData()
         {
             List<List<double>> newData = new List<List<double>>();
-            //string maxFile = dir + Constants.paths[9];
-            //string minFile = dir + Constants.paths[10];
             
             int count = normalizedData.ElementAt(0).Count;
-            //normalizedData.ToArray();
             double[] max = new double[count];
             double[] min = new double[count];
 
@@ -57,5 +54,5 @@ namespace Parser
         }
 
         
-        }  
+    }  
 }
