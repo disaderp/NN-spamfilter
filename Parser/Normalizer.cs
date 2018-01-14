@@ -8,18 +8,26 @@ namespace Parser
 {
     class Normalizer
     {
-           
+
         private List<List<double>> normalizedData = new List<List<double>>();
         private string dir = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-        
-        public void normalizeData()
+
+        public Normalizer(Dictionary<List<double>, bool> parsed)
+        {
+            foreach (KeyValuePair<List<double>, bool> val in parsed)
+            {
+                normalizedData.Add(val.Key);
+            }
+        }
+
+        public List<List<double>> normalizeData()
         {
             List<List<double>> newData = new List<List<double>>();
-            string maxFile = dir + Constants.paths[9];
-            string minFile = dir + Constants.paths[10];
+            //string maxFile = dir + Constants.paths[9];
+            //string minFile = dir + Constants.paths[10];
             
             int count = normalizedData.ElementAt(0).Count;
-            normalizedData.ToArray();
+            //normalizedData.ToArray();
             double[] max = new double[count];
             double[] min = new double[count];
 
@@ -29,37 +37,25 @@ namespace Parser
                 min[j] = Enumerable.Range(0, count).Min(i => (normalizedData.ElementAt(i)).ElementAt(j));
             }
 
-            for (int i = 0; i < normalizedData.Count; ++i )
+            for (int i = 0; i < normalizedData.Count; ++i)
+            {
+                List<double> temp = new List<double>();
                 for (int j = 0; j < count; j++)
                 {
-                    List<double> temp = new List<double>();
-                    temp.Add(2 * ((double)(normalizedData.ElementAt(i).ElementAt(j) - min[j]) / (max[j] - min[j]) - 1));
-                    File.AppendAllLines(maxFile, temp.Select(d => d.ToString()));
-                    //newData.Add(temp);
+                    if((max[j] - min[j]) == 0)
+                    {
+                        temp.Add(0);
+                        continue;
+                    }
+                    temp.Add((2) / (max[j] - min[j]) * (normalizedData.ElementAt(i).ElementAt(j) - max[j]) + 1);
                 }
-
-            //return newData;
-            
-            
-
-        }
-
-        public void loadData()
-        {
-            for (int i = 0; i < 9; ++i)
-            {
-                string dir = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\" + Constants.paths[i] + @"\";
-                foreach (string file in Directory.EnumerateFiles(dir, "*.*"))
-                {
-                    FileReader fr = new FileReader(file);
-                    EMail eMail = fr.getEmail();
-                    Parser parser = new Parser(eMail);
-                    parser.parseContent();
-                    normalizedData.Add(parser.getParsedEMail());
-
-                }
+                newData.Add(temp);
             }
+            return newData;
+            
 
         }
+
+        
         }  
 }

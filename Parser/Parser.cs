@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.IO;
+using System.Collections;
 
 namespace Parser
 {
@@ -150,7 +151,7 @@ namespace Parser
             double wordCount = 0;
             double charCount = 0;
             MatchCollection matches = Regex.Matches(eMail.getContent(), Constants.SENTENCE_PATTERN);
-            var list = matches.Cast<Match>().Select(match => match.Value).ToList();
+            var list = matches.OfType<Match>().Select(match => match.Value).ToList();
             foreach (string line in list)
             {
                 wordCount += Regex.Matches(line, Constants.WORD_PATTERN).Count;
@@ -162,13 +163,19 @@ namespace Parser
                     }
                 }
             }
+            if(getSentencesCount() == 0)
+            {
+                parsedEmail.Add(0);
+                parsedEmail.Add(0);
+                return;
+            }
             parsedEmail.Add(wordCount/ getSentencesCount());
             parsedEmail.Add(charCount/getSentencesCount());
         }
 
         public void getWordsApperance()// TO DO zamienic na regexa Constants.WORD_PATTERN
         {
-            var words = Regex.Split(eMail.getContent(), " ")
+            var words = Regex.Split(eMail.getContent(), Constants.WORD_PATTERN)
                          .AsEnumerable()
                          .GroupBy(w => w)
                          .Select(g => new { key = g.Key, count = g.Count() });
@@ -198,7 +205,7 @@ namespace Parser
 
         public void countSpecialChars()
         {
-            int [] values = Enumerable.Repeat(0, 10).ToArray();
+            int [] values = Enumerable.Repeat(0, 10).ToArray();//@TODO: niepotrzebne przechowywanie poszczegolnych wartosci
             foreach (char c in eMail.getContent())
             {
                 if (c.Equals(Constants.PUNCTATION_CHARS[0]))
@@ -231,7 +238,7 @@ namespace Parser
        
         public void countPunctationChars()
         {
-            int [] values = Enumerable.Repeat(-0, 18).ToArray();
+            int [] values = Enumerable.Repeat(-0, 18).ToArray();//@TODO: niepotrzebne przechowywanie poszczegolnych wartosci
             foreach (char c in eMail.getContent())
             {
                 if(c.Equals(Constants.PUNCTATION_CHARS[0]))
