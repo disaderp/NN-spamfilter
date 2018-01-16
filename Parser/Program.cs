@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 
 namespace Parser
 {
@@ -52,12 +52,15 @@ namespace Parser
             parsed = parseTemp;
             parseTemp = null;
 
-            string json = JsonConvert.SerializeObject(parsed);
+            //string json = JsonConvert.SerializeObject(parsed.Keys);
+            //json += "NEXTDATA" + JsonConvert.SerializeObject(parsed.Values)
 
             //foreach (string line in eMail.getMetaData())
             //  System.Console.WriteLine(line);
 
  
+          
+            System.Console.WriteLine("done");
             System.Console.ReadKey();
 
         }
