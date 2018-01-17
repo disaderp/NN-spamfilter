@@ -25,7 +25,7 @@ namespace Parser
         }
 
         
-        public void Base64Decode()
+        public void Base64Decode() //decode email if it'g given in base64
         {
             Regex r = new Regex(@"[a-zA-Z0-9\+\/]*={0,3}");
             string text = eMail.getContent().Replace("\r\n", "");
@@ -34,7 +34,7 @@ namespace Parser
             eMail.setContent (System.Text.Encoding.UTF8.GetString(base64EncodedBytes));
         }
 
-        public void parseContent()
+        public void parseContent() // main parsing function, where
         {
             if (eMail.IsBase64())
                 Base64Decode();
@@ -48,9 +48,9 @@ namespace Parser
             if(eMail.isHTML())
                 StripHTML();
 
-            countSentences();
-            countWords();
-            countChars();
+            sentencesCount = countSentences();
+            wordsCount = countWords();
+            charsCount = countChars();
 
             parsedEmail.Add(getTextLength());
             parsedEmail.Add(charsCount);
@@ -77,7 +77,7 @@ namespace Parser
             return eMail.getContent().Length;
         }
 
-        public void countChars()
+        public double countChars()
         {
 
             double result = 0;
@@ -88,7 +88,7 @@ namespace Parser
                     result++;
                 }
             }
-            charsCount = result;
+            return result;
 
         }
 
@@ -122,9 +122,9 @@ namespace Parser
             return Regex.Matches(eMail.getContent(), Constants.LINK_PATTERN).Count;
         }
 
-        public void countWords()
+        public double countWords()
         {
-            wordsCount = Regex.Matches(eMail.getContent(), Constants.WORD_PATTERN).Count;
+            return Regex.Matches(eMail.getContent(), Constants.WORD_PATTERN).Count;
         }
 
         public double getCharsInWordRatio()
@@ -142,9 +142,9 @@ namespace Parser
             return Regex.Matches(eMail.getContent(), Constants.IMG_PATTERN).Count;
         }
 
-        public void countSentences()
+        public double countSentences()
         {
-            sentencesCount = Regex.Matches(eMail.getContent(), Constants.SENTENCE_PATTERN).Count;
+            return Regex.Matches(eMail.getContent(), Constants.SENTENCE_PATTERN).Count;
         }
 
         public void countSentenceFeatures()
@@ -174,7 +174,7 @@ namespace Parser
             parsedEmail.Add(charCount/ sentencesCount);
         }
 
-        public void analiseWords()
+        public void analiseWords()// counting some words featuress
         {
            var temp = Regex.Split(eMail.getContent(), Constants.WORD_PATTERN)
                            .AsEnumerable()
@@ -186,8 +186,8 @@ namespace Parser
            int onceOccured = 0;
            int unique = temp.Count();
            double N = wordsCount * ( wordsCount - 1); //needed to count simpson measure
-           
 
+           temp.Max();
            foreach (var item in temp)
            {
                simpson += (double)item.count * ((double)item.count - 1) / N;
@@ -197,6 +197,22 @@ namespace Parser
                    ++onceOccured;
            }
            
+
+      /*int Yule(int M1, int n, int [,] tab) // M1 to liczba wszystkich słów w tekście, n to liczba typów powtórzeń (jednokrotne,dwukrotne, ośmio itp), no i powiedzmy jakaś tablica 2d określająca ile słów wystąpiło n razy.
+{
+      int K;
+      int M2 = 0;
+      for (int i = 0; i < n; i++)
+      {
+           M2 += tab[i,1] * (int)Math.Pow((double)tab[i,0],2.0); // tab[i,0] - liczba powtórzeń, tab[i,1] - liczba słów, które powtórzyły się tab[i,0] razy 
+      }   
+      K = 10000 * (M2 - M1) / (M1 * M1);
+      return K;
+}*/
+
+
+
+
            parsedEmail.Add(onceOccured/wordsCount); //hapax legomena
            parsedEmail.Add(twiceOccured/wordsCount); //hapax dislegomena
            parsedEmail.Add(twiceOccured / unique); //sichel measure
