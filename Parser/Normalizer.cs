@@ -28,11 +28,25 @@ namespace Parser
             double[] max = new double[count];
             double[] min = new double[count];
 
-            for (int j = 0; j < count ; ++j)
+            for (int i = 0; i < count ; ++i)
             {
-                max[j] = Enumerable.Range(0, count).Max(i => (normalizedData.ElementAt(i)).ElementAt(j));
-                min[j] = Enumerable.Range(0, count).Min(i => (normalizedData.ElementAt(i)).ElementAt(j));
+                double maximum = normalizedData.ElementAt(0).ElementAt(i);
+                double minimum = normalizedData.ElementAt(0).ElementAt(i);
+                for ( int j = 0; j < normalizedData.Count; ++j)
+                {
+                    if (normalizedData.ElementAt(j).ElementAt(i) > maximum)
+                        maximum = normalizedData.ElementAt(j).ElementAt(i);
+
+                    if (normalizedData.ElementAt(j).ElementAt(i) < minimum)
+                        minimum = normalizedData.ElementAt(j).ElementAt(i);
+
+                }
+                max[i] = maximum;
+                min[i] = minimum;
             }
+              //  max[j] = Enumerable.Range(0, count).Max(i => (normalizedData.ElementAt(i)).ElementAt(j));
+                //min[j] = Enumerable.Range(0, count).Min(i => (normalizedData.ElementAt(i)).ElementAt(j));
+            
 
             for (int i = 0; i < normalizedData.Count; ++i)
             {

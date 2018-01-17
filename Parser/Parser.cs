@@ -17,6 +17,7 @@ namespace Parser
         private double charsCount;
         private double sentencesCount;
         private double wordsCount;
+        public bool error = false;
             
         public Parser(EMail email)
         {
@@ -28,7 +29,7 @@ namespace Parser
         public void Base64Decode() //decode email if it'g given in base64
         {
             Regex r = new Regex(@"[a-zA-Z0-9\+\/]*={0,3}");
-            string text = eMail.getContent().Replace("\r\n", "");
+            string text = eMail.getContent().Replace("\r\n", "").Replace("\n", "");
             Match m = r.Match(text);
             var base64EncodedBytes = System.Convert.FromBase64String(m.Value);
             eMail.setContent (System.Text.Encoding.UTF8.GetString(base64EncodedBytes));
@@ -51,6 +52,9 @@ namespace Parser
             sentencesCount = countSentences();
             wordsCount = countWords();
             charsCount = countChars();
+            if (sentencesCount == 0) sentencesCount = 1;
+            if (wordsCount == 0) wordsCount = 1;
+            if (charsCount == 0) charsCount = 1;
 
             parsedEmail.Add(getTextLength());
             parsedEmail.Add(charsCount);
@@ -69,6 +73,11 @@ namespace Parser
             countSentenceFeatures();
             countCommonWords();
             analiseWords();
+
+            foreach (double test in parsedEmail)
+            {
+                if (double.IsNaN(test)) { error = true; }
+            }
            
         }
         
@@ -211,14 +220,14 @@ namespace Parser
 }*/
 
 
-
+           double bruno = Math.Pow(wordsCount, unique - Constants.value);
 
            parsedEmail.Add(onceOccured/wordsCount); //hapax legomena
            parsedEmail.Add(twiceOccured/wordsCount); //hapax dislegomena
            parsedEmail.Add(twiceOccured / unique); //sichel measure
-           parsedEmail.Add(100 * Math.Log(wordsCount, 10) / (1 - onceOccured / unique)); // honore measure
-           parsedEmail.Add(Math.Pow(wordsCount, unique - Constants.value)); //brunet measure
-           parsedEmail.Add(simpson); //simpson measure
+           //parsedEmail.Add(100 * Math.Log(wordsCount, 10) / (1 - onceOccured / unique)); // honore measure
+          // parsedEmail.Add(bruno); //brunet measure
+          parsedEmail.Add(simpson); //simpson measure
         }
 
         public void StripHTML()

@@ -36,6 +36,7 @@ namespace Parser
                     EMail eMail = fr.getEmail();
                     Parser parser = new Parser(eMail);
                     parser.parseContent();
+                    if (parser.error) continue;
                     var netInputs = parser.getParsedEMail();
                     parsed.Add(netInputs, true);
                 }
@@ -53,8 +54,8 @@ namespace Parser
             parseTemp = null;
 
             string json = JsonConvert.SerializeObject(parsed.Keys);
-            json += "NEXTDATA" + JsonConvert.SerializeObject(parsed.Values);
-
+            json += "X" + JsonConvert.SerializeObject(parsed.Values);
+            File.WriteAllText("parsed.txt", json);
             //foreach (string line in eMail.getMetaData())
             //  System.Console.WriteLine(line);
 
