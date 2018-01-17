@@ -27,14 +27,27 @@ namespace NeuralNetwork
             boollist = null;
 
             Network net = new NeuralNetwork.Network(emails.ElementAt(0).Key.Count(), 4);
+            for (int j = 0; j < 10; j++)
+            {
+                for (int i = 0; i < emails.Count(); i++)
+                {
+                    net.updateInputs(emails.ElementAt(i).Key);
+                    net.getOutput();
+                    net.calcErr(boolToDouble(emails.ElementAt(i).Value));
 
-            for (int i = 0; i < emails.Count(); i++)
+                }
+                net.nextEpoch();
+            }
+            int all = 0;
+            int ok = 0;
+            for(int i= 0;i < emails.Count(); i++)
             {
                 net.updateInputs(emails.ElementAt(i).Key);
-                Console.WriteLine(net.getOutput());
-                net.calcErr(boolToDouble(emails.ElementAt(i).Value));
-                
+                bool det = false; if (net.getOutput() > 0.5) det = true;
+                if (det == emails.ElementAt(i).Value) ok++;
+                all++;
             }
+            Console.WriteLine("Wspolczynnik wykrycia" + (float)ok*100 / all);
         }
         static double boolToDouble(bool val)
         {

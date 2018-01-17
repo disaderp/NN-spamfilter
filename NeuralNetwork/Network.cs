@@ -75,7 +75,7 @@ namespace NeuralNetwork
         }
         public void nextEpoch()
         {
-            Neuron.LEARNINGRATE *= 0.99;
+            Neuron.LEARNINGRATE *= 0.9;
         }
     }
 }
