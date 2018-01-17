@@ -56,8 +56,11 @@ namespace NeuralNetwork
                 foreach (KeyValuePair<Neuron, double> parent in top)
                 {
                     sum += parent.Key.Value * parent.Value;
+
                 }
             }
+            if (double.IsNaN(sum))
+                return;
             val = sigmoid(sum);
         }
         public void error(double expected)
@@ -74,7 +77,10 @@ namespace NeuralNetwork
             if(isInput)
             {
                 wInput = wInput + LEARNINGRATE * _delta * _input;
-            }else
+                if (double.IsNaN(wInput))
+                    return;
+            }
+            else
             {
                 bias = bias + LEARNINGRATE * _delta;
                 for (int i = 0; i<top.Count(); i++)
@@ -90,6 +96,8 @@ namespace NeuralNetwork
         }
         public double sigmoid(double x)
         {
+            if (double.IsNaN(1.0 / (1.0 + Math.Exp(-x))))
+                return 0.0 ;
             return 1.0 / (1.0 + Math.Exp(-x));
         }
         public double derivative(double x)
