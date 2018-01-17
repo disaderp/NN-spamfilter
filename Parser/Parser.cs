@@ -187,7 +187,7 @@ namespace Parser
            int unique = temp.Count();
            double N = wordsCount * ( wordsCount - 1); //needed to count simpson measure
 
-           temp.Max();
+           //temp.Max();
            foreach (var item in temp)
            {
                simpson += (double)item.count * ((double)item.count - 1) / N;
