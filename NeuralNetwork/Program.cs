@@ -9,10 +9,12 @@ using System.IO;
 namespace NeuralNetwork
 {
     class Program
-    {
+    {  
         static void Main(string[] args)
         {
+            int hidden = 4;//dla 3 nie osiaga najwyzszego wyniku, 6 duzo dluzej sie uczy
             Shared.initialize();
+            Console.WriteLine("NeuralNetwork - hiddenLayer=" + hidden + "; LearningRate=" + Neuron.LEARNINGRATE + "; epochDecrease=" + Network.epochdecrease);
             Dictionary<List<double>, bool> emails = new Dictionary<List<double>, bool>();
             List<List<double>> templist;
             bool[] boollist;
@@ -26,28 +28,30 @@ namespace NeuralNetwork
             templist = null;
             boollist = null;
 
-            Network net = new NeuralNetwork.Network(emails.ElementAt(0).Key.Count(), 4);
-            for (int j = 0; j < 10; j++)
+            Network net = new NeuralNetwork.Network(emails.ElementAt(0).Key.Count(), hidden);
+            int ok = 0;
+            for (int j = 0; j < 20; j++)
             {
+                ok = 0;
                 for (int i = 0; i < emails.Count(); i++)
                 {
                     net.updateInputs(emails.ElementAt(i).Key);
-                    net.getOutput();
+                    bool det = false; if (net.getOutput() > 0.5) det = true;
+                    if (det == emails.ElementAt(i).Value) ok++;
                     net.calcErr(boolToDouble(emails.ElementAt(i).Value));
-
                 }
+                Console.WriteLine("Epoch " + j + " Detection ratio: " + (float)(ok * 100 / emails.Count()) + "%");
                 net.nextEpoch();
             }
-            int all = 0;
-            int ok = 0;
+            ok = 0;
             for(int i= 0;i < emails.Count(); i++)
             {
                 net.updateInputs(emails.ElementAt(i).Key);
                 bool det = false; if (net.getOutput() > 0.5) det = true;
                 if (det == emails.ElementAt(i).Value) ok++;
-                all++;
             }
-            Console.WriteLine("Wspolczynnik wykrycia" + (float)ok*100 / all);
+            Console.WriteLine("Detection ratio: " + (float)(ok * 100 / emails.Count()) + "%");
+            Console.ReadKey();
         }
         static double boolToDouble(bool val)
         {

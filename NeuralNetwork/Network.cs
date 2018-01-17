@@ -11,6 +11,7 @@ namespace NeuralNetwork
         private Neuron outputn;
         private List<Neuron> listin;
         private List<Neuron> listhid;
+        public static double epochdecrease = 0.8;
         public Network(int inputs, int hidden)
         {
             listin = new List<Neuron>();
@@ -75,7 +76,7 @@ namespace NeuralNetwork
         }
         public void nextEpoch()
         {
-            Neuron.LEARNINGRATE *= 0.9;
+            Neuron.LEARNINGRATE *= epochdecrease;
         }
     }
 }

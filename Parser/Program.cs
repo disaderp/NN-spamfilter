@@ -52,7 +52,8 @@ namespace Parser
             }
             parsed = parseTemp;
             parseTemp = null;
-
+            Random rand = new Random();
+            parsed = parsed.OrderBy(x => rand.Next()).ToDictionary(item => item.Key, item => item.Value);
             string json = JsonConvert.SerializeObject(parsed.Keys);
             json += "X" + JsonConvert.SerializeObject(parsed.Values);
             File.WriteAllText("parsed.txt", json);

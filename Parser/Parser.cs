@@ -108,7 +108,14 @@ namespace Parser
 
         public double getUpperToLowerRatio()
         {
-            return eMail.getContent().Count(char.IsUpper) /(double)eMail.getContent().Count(char.IsLower);
+            int upper = eMail.getContent().Count(char.IsUpper);
+            int lower = eMail.getContent().Count(char.IsLower);
+            if (lower == 0)
+            {
+                if (upper == 0) return 0;
+                return 1;
+            }
+            return upper/lower;
         }
 
         public double getDigitRatio()
