@@ -30,7 +30,7 @@ namespace NeuralNetwork
 
             Network net = new NeuralNetwork.Network(emails.ElementAt(0).Key.Count(), hidden);
             int ok = 0;
-            for (int j = 0; j < 20; j++)
+            for (int j = 0; j < 100; j++)
             {
                 ok = 0;
                 for (int i = 0; i < emails.Count(); i++)
