@@ -14,6 +14,7 @@ namespace Parser
     {  
         private EMail eMail;
         private List <double> parsedEmail;
+       
         private double charsCount;
         private double sentencesCount;
         private double wordsCount;
@@ -25,8 +26,8 @@ namespace Parser
             parsedEmail = new List<double>();
         }
 
-        
-        public void Base64Decode() //decode email if it'g given in base64
+    
+        private void Base64Decode() //decode email if it'g given in base64
         {
             Regex r = new Regex(@"[a-zA-Z0-9\+\/]*={0,3}");
             string text = eMail.getContent().Replace("\r\n", "").Replace("\n", "");
@@ -68,16 +69,11 @@ namespace Parser
             parsedEmail.Add(getHeaderLength());
             parsedEmail.Add(sentencesCount);
             parsedEmail.Add(getPunctationCharsCount());
-           // parsedEmail.Add(getSpecialCharsCount());
+            parsedEmail.Add(getSpecialCharsCount());
             parsedEmail.Add(getCharsInWordRatio());
             countSentenceFeatures();
             countCommonWords();
             analiseWords();
-
-            foreach (double test in parsedEmail)
-            {
-                if (double.IsNaN(test)) { error = true; }
-            }
            
         }
         
@@ -86,7 +82,7 @@ namespace Parser
             return eMail.getContent().Length;
         }
 
-        public double countChars()
+        private double countChars()
         {
 
             double result = 0;
@@ -101,12 +97,12 @@ namespace Parser
 
         }
 
-        public double getAlphaCharsRatio()
+        private double getAlphaCharsRatio()
         {
             return (eMail.getContent().Count(char.IsLetterOrDigit))/charsCount;
         }
 
-        public double getUpperToLowerRatio()
+        private double getUpperToLowerRatio()
         {
             int upper = eMail.getContent().Count(char.IsUpper);
             int lower = eMail.getContent().Count(char.IsLower);
@@ -118,32 +114,32 @@ namespace Parser
             return upper/lower;
         }
 
-        public double getDigitRatio()
+        private double getDigitRatio()
         {
             return eMail.getContent().Count(char.IsDigit)/charsCount;
         }
 
-        public double getWhiteSpacesRatio()
+        private double getWhiteSpacesRatio()
         {
             return eMail.getContent().Count(char.IsWhiteSpace) / getTextLength();
         }
 
-        public double getHyperTextCount() 
+        private double getHyperTextCount() 
         {
             return Regex.Matches(eMail.getContent(), Constants.HREF_PATTERN).Count;
         }
 
-        public double getLinksCount()
+        private double getLinksCount()
         {
             return Regex.Matches(eMail.getContent(), Constants.LINK_PATTERN).Count;
         }
 
-        public double countWords()
+        private double countWords()
         {
             return Regex.Matches(eMail.getContent(), Constants.WORD_PATTERN).Count;
         }
 
-        public double getCharsInWordRatio()
+        private double getCharsInWordRatio()
         {
             return charsCount / wordsCount;
         }
@@ -158,12 +154,12 @@ namespace Parser
             return Regex.Matches(eMail.getContent(), Constants.IMG_PATTERN).Count;
         }
 
-        public double countSentences()
+        private double countSentences()
         {
             return Regex.Matches(eMail.getContent(), Constants.SENTENCE_PATTERN).Count;
         }
 
-        public void countSentenceFeatures()
+        private void countSentenceFeatures()
         {
             double wordCount = 0;
             double charCount = 0;
@@ -190,7 +186,7 @@ namespace Parser
             parsedEmail.Add(charCount/ sentencesCount);
         }
 
-        public void analiseWords()// counting some words featuress
+        private void analiseWords()// counting some words featuress
         {
            var temp = Regex.Split(eMail.getContent(), Constants.WORD_PATTERN)
                            .AsEnumerable()
@@ -203,7 +199,6 @@ namespace Parser
            int unique = temp.Count();
            double N = wordsCount * ( wordsCount - 1); //needed to count simpson measure
 
-           //temp.Max();
            foreach (var item in temp)
            {
                simpson += (double)item.count * ((double)item.count - 1) / N;
@@ -214,21 +209,9 @@ namespace Parser
            }
            
 
-      /*int Yule(int M1, int n, int [,] tab) // M1 to liczba wszystkich słów w tekście, n to liczba typów powtórzeń (jednokrotne,dwukrotne, ośmio itp), no i powiedzmy jakaś tablica 2d określająca ile słów wystąpiło n razy.
-{
-      int K;
-      int M2 = 0;
-      for (int i = 0; i < n; i++)
-      {
-           M2 += tab[i,1] * (int)Math.Pow((double)tab[i,0],2.0); // tab[i,0] - liczba powtórzeń, tab[i,1] - liczba słów, które powtórzyły się tab[i,0] razy 
-      }   
-      K = 10000 * (M2 - M1) / (M1 * M1);
-      return K;
-}*/
 
-
-           double bruno = Math.Pow(wordsCount, unique - Constants.value);
-
+          // ulong bruno = (ulong)Math.Pow(wordsCount, unique - Constants.value);
+           parsedEmail.Add(unique / wordsCount);
            parsedEmail.Add(onceOccured/wordsCount); //hapax legomena
            parsedEmail.Add(twiceOccured/wordsCount); //hapax dislegomena
            parsedEmail.Add(twiceOccured / unique); //sichel measure
@@ -237,13 +220,13 @@ namespace Parser
           parsedEmail.Add(simpson); //simpson measure
         }
 
-        public void StripHTML()
+        private void StripHTML()
         {
             eMail.setContent(Regex.Replace(eMail.getContent(), Constants.HTML_PATTERN, String.Empty));// remove all markups
             eMail.setContent(HttpUtility.HtmlDecode(eMail.getContent()));// remove entities
         }
 
-        public void countCommonWords()
+        private void countCommonWords()
         {
             int common = 0;
             for (int i = 0; i < Constants.COMMON_WORDS.Count(); ++i)
@@ -251,18 +234,18 @@ namespace Parser
             parsedEmail.Add(common);//scalenie danych
         }    
      
-        public double getShortWordsCount()
+        private double getShortWordsCount()
         {
              return wordsCount - Regex.Matches(eMail.getContent(), Constants.LONG_WORD_PATTERN).Count;
         }
 
-        public double getSpecialCharsCount()
+        private double getSpecialCharsCount()
         {
             return Regex.Matches(eMail.getContent(), Constants.SPECIAL_CHAR).Count;
            
         }
        
-        public double getPunctationCharsCount()
+        private double getPunctationCharsCount()
         {
             return Regex.Matches(eMail.getContent(), Constants.PUNCTATION_CHAR).Count;
         }

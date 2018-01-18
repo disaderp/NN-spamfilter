@@ -20,9 +20,8 @@ namespace Parser
         public static readonly string IMG_PATTERN = "<img";
         public static readonly string FONT_PATTERN = "<font";
         public static readonly string SENTENCE_PATTERN = @"(\S.+?[.!?])(?=\s+|$)";
-        public static readonly string PUNCTATION_CHAR =@"[\p{P}]";
-        public static readonly string SPECIAL_CHAR = @"[*',_+=%$@-/\]";
-        public static readonly double value = 0.17; //brunet measure value
+        public static readonly string PUNCTATION_CHAR = @"[،/;/?/!/:/(/)/–/“/«/»/</>/[/{/}/./]";// match any of these characters
+        public static readonly string SPECIAL_CHAR = @"[/'/,/_/+/=/%/$/@/-/\\/*/ـ]";// mattch any of these characters
         public static readonly string[] COMMON_WORDS = { "shortest", "mandatory", "standardization", "sorry", "supported", "people's", "enter", "quality", "organization", "ivestment", "vary", "valuable", "republic" };
 
         public static readonly string[] paths = { "easyHam", "easyHam2", "easyHam3", "hardHam", "hardHam2", "spam", "spam2", "spam3", "spam4", "max.txt", "min.txt" };
