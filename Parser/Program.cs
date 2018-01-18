@@ -14,11 +14,11 @@ namespace Parser
     {
         static void Main(string[] args)
         {
-            string filePath1 = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\";
+            string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\";
             Dictionary<List<double>, bool> parsed = new Dictionary<List<double>, bool>();
             foreach (string folder in Constants.cleanpaths)
             {
-                foreach (string file in Directory.EnumerateFiles(filePath1 + folder, "*.*"))
+                foreach (string file in Directory.EnumerateFiles(filePath + folder, "*.*"))
                 {
                     FileReader fr = new FileReader(file);
                     EMail eMail = fr.getEmail();
@@ -30,7 +30,7 @@ namespace Parser
             }
             foreach (string folder in Constants.spampaths)
             {
-                foreach (string file in Directory.EnumerateFiles(filePath1 + folder, "*.*"))
+                foreach (string file in Directory.EnumerateFiles(filePath + folder, "*.*"))
                 {
                     FileReader fr = new FileReader(file);
                     EMail eMail = fr.getEmail();
@@ -45,6 +45,9 @@ namespace Parser
             Normalizer n = new Normalizer(parsed);
             List<List<double>> newData = new List<List<double>>();
             Dictionary<List<double>, bool> parseTemp = new Dictionary<List<double>, bool>();
+            Dictionary<List<double>, bool> validationData = new Dictionary<List<double>, bool>();
+            Dictionary<List<double>, bool> learningData = new Dictionary<List<double>, bool>();
+
             newData = n.normalizeData();
             for(int i = 0; i< parsed.Count; i++)
             {
@@ -54,12 +57,29 @@ namespace Parser
             parseTemp = null;
             Random rand = new Random();
             parsed = parsed.OrderBy(x => rand.Next()).ToDictionary(item => item.Key, item => item.Value);
-            string json = JsonConvert.SerializeObject(parsed.Keys);
-            json += "X" + JsonConvert.SerializeObject(parsed.Values);
-            File.WriteAllText("parsed.txt", json);
-            //foreach (string line in eMail.getMetaData())
-            //  System.Console.WriteLine(line);
+          
+            int separator = 0;
+            foreach (var item in parsed) // split data into 2 groups: learning and validation
+            {
+                if (separator % 3 == 0)
+                    validationData.Add(item.Key, item.Value);
 
+                else 
+                    learningData.Add(item.Key, item.Value);
+
+                ++separator;
+            }
+
+            string json = JsonConvert.SerializeObject(validationData.Keys);
+            json += "X" + JsonConvert.SerializeObject(validationData.Values);
+            
+            File.WriteAllText("validation.txt", json);
+
+            json= JsonConvert.SerializeObject(learningData.Keys);
+            json += "X" + JsonConvert.SerializeObject(learningData.Values);
+            
+            File.WriteAllText("learning.txt", json);
+            
  
      
             System.Console.WriteLine("done");

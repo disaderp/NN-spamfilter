@@ -18,7 +18,7 @@ namespace NeuralNetwork
             Dictionary<List<double>, bool> emails = new Dictionary<List<double>, bool>();
             List<List<double>> templist;
             bool[] boollist;
-            string[] json = File.ReadAllText("parsed.txt").Split('X');
+            string[] json = File.ReadAllText("validation.txt").Split('X');
             templist = JsonConvert.DeserializeObject<List<List<double>>>(json[0]);
             boollist = JsonConvert.DeserializeObject<bool[]>(json[1]);
             for (int i = 0; i< boollist.Count(); i++)
