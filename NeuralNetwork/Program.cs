@@ -53,13 +53,19 @@ namespace NeuralNetwork
                 net.nextEpoch();
             }
             ok = 0;
+            int falsepos = 0;
+            int falseneg = 0;
             for(int i= 0;i < validate.Count(); i++)
             {
                 net.updateInputs(validate.ElementAt(i).Key);
                 bool det = false; if (net.getOutput() > 0.5) det = true;
                 if (det == validate.ElementAt(i).Value) ok++;
+                else if (det) falsepos++; else falseneg++;
             }
             Console.WriteLine("Validation data detection ratio: " + (float)(ok * 100 / validate.Count()) + "%");
+            Console.WriteLine("Validation data false positive count: " + falsepos);
+            Console.WriteLine("Validation data false negative count: " + falseneg);
+            Console.WriteLine("Validation data count: " + validate.Count());
             Console.ReadLine();
         }
         static double boolToDouble(bool val)
