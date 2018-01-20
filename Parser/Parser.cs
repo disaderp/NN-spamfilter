@@ -42,7 +42,7 @@ namespace Parser
                 Base64Decode();
 
 
-            parsedEmail.Add(Regex.Matches(eMail.getContent(), Constants.HTML_PATTERN).Count); //html tags number
+            parsedEmail.Add(getHtmlCount()); //html tags number
             parsedEmail.Add(getHyperTextCount());
             parsedEmail.Add(getFontTagsCount());
             parsedEmail.Add(getImgTagsCount());
@@ -80,6 +80,10 @@ namespace Parser
         public double getTextLength()
         {
             return eMail.getContent().Length;
+        }
+        private double getHtmlCount()
+        {
+           return Regex.Matches (eMail.getContent(), Constants.HTML_PATTERN).Count;
         }
 
         private double countChars()
@@ -199,6 +203,13 @@ namespace Parser
            int unique = temp.Count();
            double N = wordsCount * ( wordsCount - 1); //needed to count simpson measure
 
+           if (N == 0)
+           {
+               parsedEmail.Add(0); //hapax legomena
+               parsedEmail.Add(0); //hapax dislegomena
+               parsedEmail.Add(0); //sichel measure
+               parsedEmail.Add(0); //simpson mea
+           }
            foreach (var item in temp)
            {
                simpson += (double)item.count * ((double)item.count - 1) / N;
@@ -208,16 +219,14 @@ namespace Parser
                    ++onceOccured;
            }
            
+            
 
 
-          // ulong bruno = (ulong)Math.Pow(wordsCount, unique - Constants.value);
-           parsedEmail.Add(unique / wordsCount);
+          
            parsedEmail.Add(onceOccured/wordsCount); //hapax legomena
            parsedEmail.Add(twiceOccured/wordsCount); //hapax dislegomena
            parsedEmail.Add(twiceOccured / unique); //sichel measure
-           //parsedEmail.Add(100 * Math.Log(wordsCount, 10) / (1 - onceOccured / unique)); // honore measure
-          // parsedEmail.Add(bruno); //brunet measure
-          parsedEmail.Add(simpson); //simpson measure
+           parsedEmail.Add(simpson); //simpson measure
         }
 
         private void StripHTML()

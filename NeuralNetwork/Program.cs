@@ -19,7 +19,7 @@ namespace NeuralNetwork
             Dictionary<List<double>, bool> validate = new Dictionary<List<double>, bool>();
             List<List<double>> templist;
             bool[] boollist;
-            string[] json = File.ReadAllText("learning.txt").Split('X');
+            string[] json = File.ReadAllText("learning1.txt").Split('X');
             templist = JsonConvert.DeserializeObject<List<List<double>>>(json[0]);
             boollist = JsonConvert.DeserializeObject<bool[]>(json[1]);
             for (int i = 0; i< boollist.Count(); i++)
@@ -27,7 +27,7 @@ namespace NeuralNetwork
                 train.Add(templist[i], boollist[i]);
             }
 
-            json = File.ReadAllText("validation.txt").Split('X');
+            json = File.ReadAllText("validation1.txt").Split('X');
             templist = JsonConvert.DeserializeObject<List<List<double>>>(json[0]);
             boollist = JsonConvert.DeserializeObject<bool[]>(json[1]);
             for (int i = 0; i < boollist.Count(); i++)
@@ -39,7 +39,7 @@ namespace NeuralNetwork
 
             Network net = new NeuralNetwork.Network(train.ElementAt(0).Key.Count(), hidden);
             int ok = 0;
-            for (int j = 0; j < 20; j++)
+            for (int j = 0; j < 30; j++)
             {
                 ok = 0;
                 for (int i = 0; i < train.Count(); i++)

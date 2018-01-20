@@ -20,7 +20,7 @@ namespace Parser
         public static readonly string IMG_PATTERN = "<img";
         public static readonly string FONT_PATTERN = "<font";
         public static readonly string SENTENCE_PATTERN = @"(\S.+?[.!?])(?=\s+|$)";
-        public static readonly string PUNCTATION_CHAR = @"[،/;/?/!/:/(/)/–/“/«/»/</>/[/{/}/./]";// match any of these characters
+        public static readonly string PUNCTATION_CHAR =@"[،/;/?/!/:/(/)/–/“/«/»/</>/[/{/}/./]";// match any of these characters
         public static readonly string SPECIAL_CHAR = @"[/'/,/_/+/=/%/$/@/-/\\/*/ـ]";// mattch any of these characters
         public static readonly string[] COMMON_WORDS = { "shortest", "mandatory", "standardization", "sorry", "supported", "people's", "enter", "quality", "organization", "ivestment", "vary", "valuable", "republic" };
 
