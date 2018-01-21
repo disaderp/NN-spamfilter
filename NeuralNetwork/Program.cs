@@ -12,14 +12,23 @@ namespace NeuralNetwork
     {  
         static void Main(string[] args)
         {
-            int hidden = 4;//dla 3 nie osiaga najwyzszego wyniku, 6 duzo dluzej sie uczy
+            int hidden = 4;
             Shared.initialize();
             Console.WriteLine("NeuralNetwork - hiddenLayer=" + hidden + "; LearningRate=" + Neuron.LEARNINGRATE + "; epochDecrease=" + Network.epochdecrease);
             Dictionary<List<double>, bool> train = new Dictionary<List<double>, bool>();
             Dictionary<List<double>, bool> validate = new Dictionary<List<double>, bool>();
             List<List<double>> templist;
             bool[] boollist;
-            string[] json = File.ReadAllText("learning1.txt").Split('X');
+            string[] json = { };
+            try
+            {
+                json = File.ReadAllText("learning.txt").Split('X');
+            }catch(Exception x)
+            {
+                Console.WriteLine("No file found. Run Parser.exe first");
+                Console.ReadLine();
+                Environment.Exit(1);
+            }
             templist = JsonConvert.DeserializeObject<List<List<double>>>(json[0]);
             boollist = JsonConvert.DeserializeObject<bool[]>(json[1]);
             for (int i = 0; i< boollist.Count(); i++)
@@ -27,7 +36,7 @@ namespace NeuralNetwork
                 train.Add(templist[i], boollist[i]);
             }
 
-            json = File.ReadAllText("validation1.txt").Split('X');
+            json = File.ReadAllText("validation.txt").Split('X');
             templist = JsonConvert.DeserializeObject<List<List<double>>>(json[0]);
             boollist = JsonConvert.DeserializeObject<bool[]>(json[1]);
             for (int i = 0; i < boollist.Count(); i++)

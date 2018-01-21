@@ -14,8 +14,7 @@ namespace Parser
     {
         static void Main(string[] args)
         {
-            string filePath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\EMAILS\";
-            //string netPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory));
+            string filePath = "EMAILS/";
            
             Dictionary<List<double>, bool> parsed = new Dictionary<List<double>, bool>();
             foreach (string folder in Constants.cleanpaths)

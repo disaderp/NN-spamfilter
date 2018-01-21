@@ -59,8 +59,6 @@ namespace NeuralNetwork
 
                 }
             }
-            if (double.IsNaN(sum))
-                return;
             val = sigmoid(sum);
         }
         public void error(double expected)
@@ -77,8 +75,6 @@ namespace NeuralNetwork
             if(isInput)
             {
                 wInput = wInput + LEARNINGRATE * _delta * _input;
-                if (double.IsNaN(wInput))
-                    return;
             }
             else
             {
@@ -96,8 +92,6 @@ namespace NeuralNetwork
         }
         public double sigmoid(double x)
         {
-            if (double.IsNaN(1.0 / (1.0 + Math.Exp(-x))))
-                return 0.0 ;
             return 1.0 / (1.0 + Math.Exp(-x));
         }
         public double derivative(double x)

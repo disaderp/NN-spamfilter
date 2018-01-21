@@ -45,8 +45,6 @@ namespace NeuralNetwork
             foreach (Neuron n in listhid)
             {
                 n.calculate();
-                if (double.IsNaN(n.Value))
-                    break;
             }
             outputn.calculate();
             return outputn.Value;
